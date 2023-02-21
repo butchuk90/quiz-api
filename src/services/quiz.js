@@ -11,7 +11,7 @@ async function saveQuizAsync(quiz) {
     const allQuizzes = await db.getAllQuizzes();
     const nameExists = allQuizzes
         .filter(q => q.id != quiz.id)
-        .some(q => q.name.toLowerCase() == quiz.name.toLowerCase().trim());    
+        .some(q => q.name.toLowerCase() == quiz.name.toLowerCase().trim());
     if (nameExists) {
         throw new ValidationError('Duplicate quiz name');
     }
@@ -73,7 +73,7 @@ function trueShuffle(list) {
                 needToShuffle = false;
                 break;
             }
-        }    
+        }
     }
 
     return shuffled;
@@ -108,7 +108,7 @@ async function hostQuizAsync(id, getRandomRoomCode = getRandom4DigitCode) {
 
         questions.push(question);
     });
-    
+
     let haveUniqueCode = false;
     let roomCode = undefined;
 
@@ -199,7 +199,7 @@ async function getStateAsync(roomCode, playerName = undefined) {
                 }
                 if (player && (player.answer == a.letter)) {
                     answer.isSelected = true;
-                }    
+                }
                 state.answers.push(answer);
             });
             if (!player) {
@@ -276,7 +276,7 @@ async function submitAnswerAsync(roomCode, playerName, answer) {
 }
 
 function start(instance) {
-    if (instance.players.length == 0) {
+    if (instance.players.length < 2) {
         throw new InvalidOperationError('Not enough players yet');
     }
     instance.questionNumber = 1;
@@ -303,7 +303,7 @@ function rankPlayers(players) {
         if (i > 0 && p.score != players[i-1].score) {
             rank = i + 1;
         }
-        p.rank = rank;                
+        p.rank = rank;
     });
 }
 
@@ -338,7 +338,7 @@ function nextQuestion(instance) {
 }
 
 async function nextStageAsync(roomCode) {
-    const instance = await db.getInstance(roomCode);    
+    const instance = await db.getInstance(roomCode);
 
     if (instance == undefined) {
         throw new NotFoundError('Room not found');
@@ -378,7 +378,7 @@ async function deleteRoomAsync(roomCode) {
 
 async function init() {
     await db.saveQuiz(require('../sample-quizzes/demo-quiz-1'));
-    await db.saveQuiz(require('../sample-quizzes/demo-quiz-2'));    
+    await db.saveQuiz(require('../sample-quizzes/demo-quiz-2'));
 }
 
 init();
